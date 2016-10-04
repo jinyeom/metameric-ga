@@ -1,5 +1,5 @@
 # METAMERIC GENETIC ALGORITHM (MGA)
-# 
+#
 # MODULE:     mga.py
 # AUTHOR:     Jinseok Yeom
 # VERSION:    0.1
@@ -20,49 +20,63 @@ MUTATION_RATE       = 0.1   # mutation rate
 
 # Metavariable
 class Metavar(object):
-    def __init__(self, size):
-        self.size = size            # number of design variables
-        self.dv = npr.rand(size)    # randomly initialized design variables
+    def __init__(self, mv_id):
+        self.mv_id = mv_id                  # metavariable ID
+        self.dv = npr.rand(METAVAR_SIZE)    # design variables
 
     # calculate dissimilarity with other metavariable.
     def dissimilarity(self, m1):
-        assert (self.size == m1.size), "invalid argument metavariable"
         return
 
 # Variable-length Genome
 class Genome(object):
-    def __init__(self, mv_size, length):
-        self.length = length
-        self.genome = [Metavariable(mv_size) for x in range(length)]       
- 
-    def mutate(self):
+    def __init__(self, g_id):
+        length = npr.randint(GENOME_LEN_MIN, GENOME_LEN_MAX)
+
+        self.g_id = g_id                                    # genome ID
+        self.length = length                                # genome length
+        self.genotype = [Metavar(i) for i in range(length)] # genotype
+
+    # design variable mutation 
+    def dv_mutate(self):
+        
+        # to be implemented
+
         return
+
+    # metavariable insertion
+    def metavar_insert(self):
+        
+        # to be implemented
     
-    def sm_recombination(self):
+        return
+
+    # metavariable deletion
+    def metavar_delete(self):
+        
+        # to be implemented
+        
+        return 
+
+    # similar-metavariable recombination
+    def sm_recombine(self, g1):
+        
+        # to be implemented 
+    
         return
 
 # Metameric Genetic Algorithm
 class MGA(object):
     def __init__(self):
-        assert (type(p[0]) is int and p[0] > 0), \
-            "invalid number of generations"
-        assert (type(p[1]) is int and p[1] > 0), \
-            "invalid size of population"
-        assert (type(p[2]) is int and p[2] > 0), \
-            "invalid size of metavariable"
-        assert (type(p[3]) is int and p[3] > 0), \
-            "invalid minimum length of genome"
-        assert (type(p[4]) is int and param[4] > param[3]), \
-            "invalid minimum and maximum lengths of genome"
-        assert (type(p[5]) is float and 0.0 <= p[5] and p[5] < 1.0), \
-            "invalid crossover rate"
-        assert (type(p[6]) is float and 0.0 <= p[6] and p[6] < 1.0), \
-            "invalid mutation rate"
+        self.best_genome = []
+        self.population = [Genome(i) for i in range(POPULATION_SIZE)]
 
+    # NSGA-II based selection
+    def select(self):
+        
+        # to be implemented
 
-        self.population = [Genome(METAVAR_SIZE, npr.randint(GENOME_LEN_MIN, GENOME_LEN_MAX)) for x in range(POPULATION_SIZE)]
-
+        return
 
 if __name__ == '__main__':
-
     mga = MGA()
