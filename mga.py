@@ -47,13 +47,13 @@ class MGA(object):
         ]
         param = [kwargs.get(kw) for kw in keywords]
 
-        assert (type(param[0]) is int && param[0] > 0), "invalid number of generations"
-        assert (type(param[1]) is int && param[1] > 0), "invalid size of population"
-        assert (type(param[2]) is int && param[2] > 0), "invalid size of metavariable"
-        assert (type(param[3]) is int && param[3] > 0), "invalid minimum length of genome"
-        assert (type(param[4]) is int && param[4] > param[3]), "invalid minimum and maximum lengths of genome"
-        assert (type(param[5]) is float && 0.0 <= xover_rate && xover_rate < 1.0), "invalid crossover rate"
-        assert (type(param[6]) is float && 0.0 <= mut_rate && mut_rate < 1.0), "invalid mutation rate"
+        assert (type(param[0]) is int and param[0] > 0), "invalid number of generations"
+        assert (type(param[1]) is int and param[1] > 0), "invalid size of population"
+        assert (type(param[2]) is int and param[2] > 0), "invalid size of metavariable"
+        assert (type(param[3]) is int and param[3] > 0), "invalid minimum length of genome"
+        assert (type(param[4]) is int and param[4] > param[3]), "invalid minimum and maximum lengths of genome"
+        assert (type(param[5]) is float and 0.0 <= xover_rate and xover_rate < 1.0), "invalid crossover rate"
+        assert (type(param[6]) is float and 0.0 <= mut_rate and mut_rate < 1.0), "invalid mutation rate"
 
         self.parameters = param
         self.population = [Genome(mv_size, npr.randint(l_min, l_max)) for x in range(p_size)]
