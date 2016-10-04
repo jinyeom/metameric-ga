@@ -9,11 +9,20 @@
 import numpy as np
 import numpy.random as npr
 
+# MGA parameters
+NUM_GENERATION      = 100   # number of generations
+POPULATION_SIZE     = 100   # size of genome population
+METAVAR_SIZE        = 5     # number of design variables in a metavariable
+GENOME_LEN_MIN      = 3     # minimum number of metavariables in a genome
+GENOME_LEN_MAX      = 5     # maximum number of metavariables in a genome
+RECOMBINATION_RATE  = 0.1   # recombination rate
+MUTATION_RATE       = 0.1   # mutation rate
+
 # Metavariable
 class Metavar(object):
     def __init__(self, size):
-        self.size = size
-        self.dv = npr.rand(size)
+        self.size = size            # number of design variables
+        self.dv = npr.rand(size)    # randomly initialized design variables
 
     # calculate dissimilarity with other metavariable.
     def dissimilarity(self, m1):
@@ -34,38 +43,26 @@ class Genome(object):
 
 # Metameric Genetic Algorithm
 class MGA(object):
-    def __init__(self, **kwargs):
-        # process parameters
-        keywords = [
-            "num_generation",       # number of generations
-            "population_size",      # size of genome population
-            "metavar_size",         # number of design variables in metavariable
-            "genome_len_min",       # minimum number of metavariables in a genome
-            "genome_len_max",       # maximum number if metavariables in a genome
-            "recombination_rate",   # recombination rate
-            "mutation_rate",        # mutation rate
-        ]
-        param = [kwargs.get(kw) for kw in keywords]
+    def __init__(self):
+        assert (type(p[0]) is int and p[0] > 0), \
+            "invalid number of generations"
+        assert (type(p[1]) is int and p[1] > 0), \
+            "invalid size of population"
+        assert (type(p[2]) is int and p[2] > 0), \
+            "invalid size of metavariable"
+        assert (type(p[3]) is int and p[3] > 0), \
+            "invalid minimum length of genome"
+        assert (type(p[4]) is int and param[4] > param[3]), \
+            "invalid minimum and maximum lengths of genome"
+        assert (type(p[5]) is float and 0.0 <= p[5] and p[5] < 1.0), \
+            "invalid crossover rate"
+        assert (type(p[6]) is float and 0.0 <= p[6] and p[6] < 1.0), \
+            "invalid mutation rate"
 
-        assert (type(param[0]) is int and param[0] > 0), "invalid number of generations"
-        assert (type(param[1]) is int and param[1] > 0), "invalid size of population"
-        assert (type(param[2]) is int and param[2] > 0), "invalid size of metavariable"
-        assert (type(param[3]) is int and param[3] > 0), "invalid minimum length of genome"
-        assert (type(param[4]) is int and param[4] > param[3]), "invalid minimum and maximum lengths of genome"
-        assert (type(param[5]) is float and 0.0 <= xover_rate and xover_rate < 1.0), "invalid crossover rate"
-        assert (type(param[6]) is float and 0.0 <= mut_rate and mut_rate < 1.0), "invalid mutation rate"
 
-        self.parameters = param
-        self.population = [Genome(mv_size, npr.randint(l_min, l_max)) for x in range(p_size)]
+        self.population = [Genome(METAVAR_SIZE, npr.randint(GENOME_LEN_MIN, GENOME_LEN_MAX)) for x in range(POPULATION_SIZE)]
+
 
 if __name__ == '__main__':
-    # MGA constants
-    NUM_GENERATION      = 100
-    POPULATION_SIZE     = 100
-    METAVAR_SIZE        = 5
-    GENOME_LEN_MIN      = 3
-    GENOME_LEN_MAX      = 5
-    RECOMB_RATE         = 0.1
-    MUTATION_RATE       = 0.1
 
-
+    mga = MGA()
