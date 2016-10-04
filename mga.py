@@ -10,32 +10,46 @@ import numpy as np
 import numpy.random as npr
 
 # MGA parameters
-NUM_GENERATION      = 100   # number of generations
-POPULATION_SIZE     = 100   # size of genome population
-METAVAR_SIZE        = 5     # number of design variables in a metavariable
-GENOME_LEN_MIN      = 3     # minimum number of metavariables in a genome
-GENOME_LEN_MAX      = 5     # maximum number of metavariables in a genome
-RECOMBINATION_RATE  = 0.1   # recombination rate
-MUTATION_RATE       = 0.1   # mutation rate
+NUM_GENERATION = 100 # number of generations
+POPULATION_SIZE = 100 # size of genome population
+METAVAR_SIZE = 5 # number of design variables in a metavariable
+GENOME_LEN_MIN = 3 # minimum number of metavariables in a genome
+GENOME_LEN_MAX = 5 # maximum number of metavariables in a genome
+RECOMBINATION_RATE = 0.1 # recombination rate
+MUTATION_RATE = 0.1 # mutation rate
 
-# Metavariable
+# Metavar implements a metavariable, which includes its metavariable ID and
+# a fixed number of design variables. 
 class Metavar(object):
     def __init__(self, mv_id):
-        self.mv_id = mv_id                  # metavariable ID
-        self.dv = npr.rand(METAVAR_SIZE)    # design variables
+        self.mv_id = mv_id 
+        self.dv = npr.rand(METAVAR_SIZE)
+
+    def __str__(self):
+        return "MV_ID %d: %s" % (self.mv_id, np.array_str(self.dv))
 
     # calculate dissimilarity with other metavariable.
     def dissimilarity(self, m1):
-        return
+        diff = 0.0
+        for x in range(METAVAR_SIZE):
+            # assuming each design variable is already normalized
+            diff += abs(self.dv[x] - m1.dv[x])
+        return diff / float(METAVAR_SIZE)
 
-# Variable-length Genome
+    __repr__ = __str__
+# end of Metavar
+
+# Genome implements a variable-length genome which includes genome ID,
+# random variable length, and a set of metavariables.
 class Genome(object):
     def __init__(self, g_id):
         length = npr.randint(GENOME_LEN_MIN, GENOME_LEN_MAX)
+        self.g_id = g_id
+        self.length = length
+        self.genotype = [Metavar(i) for i in range(length)]
 
-        self.g_id = g_id                                    # genome ID
-        self.length = length                                # genome length
-        self.genotype = [Metavar(i) for i in range(length)] # genotype
+    def __str__(self):
+        return "G_ID %d:\n%s" % (self.g_id, "\n".join(self.genotype))
 
     # design variable mutation 
     def dv_mutate(self):
@@ -65,6 +79,9 @@ class Genome(object):
     
         return
 
+    __repr__ = __str__
+# end of Genome
+
 # Metameric Genetic Algorithm
 class MGA(object):
     def __init__(self):
@@ -78,5 +95,27 @@ class MGA(object):
 
         return
 
+# testing function
+def test():
+    # metavariable test
+    print("=== METAVARIABLE TEST ===")
+    mv0 = Metavar(0)
+    mv1 = Metavar(1)
+    print(mv0)
+    print(mv1)
+    
+    # dissimilarity test
+    print("=== DISSIMILARITY TEST ===")
+    diss0 = mv0.dissimilarity(mv1)
+    diss1 = mv1.dissimilarity(mv0)
+    print("mv0 dissimilarity with mv1: %f" % diss0)
+    print("mv1 dissimilarity with mv0: %f" % diss1)
+    assert (diss0 == diss1), "DISSIMILARITY TEST FAILED"
+
+    # genome test
+    print("=== GENOME TEST ===")
+    g = Genome(0)
+    print(g)
+
 if __name__ == '__main__':
-    mga = MGA()
+    test()
