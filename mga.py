@@ -1,5 +1,10 @@
 # METAMERIC GENETIC ALGORITHM (MGA)
 #
+#   Metameric Genetic Algorithm, or MGA, is a genetic algorithm with
+# variable length genome, developed by Matthew L. Ryerkerk, Ronald C.
+# Averill, Kalyanmoy, and Erik D. Goodman at Michigan State University.
+# Following code is a Python prototype implementation of MGA.
+#
 # MODULE:     mga.py
 # AUTHOR:     Jinseok Yeom
 # VERSION:    0.2
@@ -9,14 +14,27 @@
 import numpy as np
 import numpy.random as npr
 
-# MGA parameters
-NUM_GENERATION = 100 # number of generations
-POPULATION_SIZE = 100 # size of genome population
-METAVAR_SIZE = 5 # number of design variables in a metavariable
-GENOME_LEN_MIN = 2 # minimum number of metavariables in a genome
-GENOME_LEN_MAX = 8 # maximum number of metavariables in a genome
-RECOMBINATION_RATE = 0.1 # recombination rate
-MUTATION_RATE = 0.1 # mutation rate
+# number of generations
+NUM_GENERATION = 100 
+
+# size of genome population
+POPULATION_SIZE = 100 
+
+# number of design variables in a metavariable
+METAVAR_SIZE = 5
+
+# minimum number of metavariables in a genome
+GENOME_LEN_MIN = 2 
+
+# maximum number of metavariables in a genome
+GENOME_LEN_MAX = 8
+
+# recombination rate
+RECOMBINATION_RATE = 0.1 
+
+# mutation rate
+MUTATION_RATE = 0.1
+
 
 # Metavar implements a metavariable, which includes its metavariable ID and
 # a fixed number of design variables. 
