@@ -1,2 +1,2 @@
-# variable-sized-ea
-python implementation of variable-sized GA
+# Metameric Genetic Algorithm
+python implementation of Metameric GA
