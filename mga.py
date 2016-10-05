@@ -2,7 +2,7 @@
 #
 # MODULE:     mga.py
 # AUTHOR:     Jinseok Yeom
-# VERSION:    0.1
+# VERSION:    0.2
 # SINCE:      10/03/2016
 #
 
@@ -13,8 +13,8 @@ import numpy.random as npr
 NUM_GENERATION = 100 # number of generations
 POPULATION_SIZE = 100 # size of genome population
 METAVAR_SIZE = 5 # number of design variables in a metavariable
-GENOME_LEN_MIN = 3 # minimum number of metavariables in a genome
-GENOME_LEN_MAX = 5 # maximum number of metavariables in a genome
+GENOME_LEN_MIN = 2 # minimum number of metavariables in a genome
+GENOME_LEN_MAX = 8 # maximum number of metavariables in a genome
 RECOMBINATION_RATE = 0.1 # recombination rate
 MUTATION_RATE = 0.1 # mutation rate
 
@@ -49,7 +49,7 @@ class Genome(object):
         self.genotype = [Metavar(i) for i in range(length)]
 
     def __str__(self):
-        return "G_ID %d:\n%s" % (self.g_id, "\n".join(self.genotype))
+        return "G_ID %d:\n%s" % (self.g_id, "\n".join([str(mv) for mv in self.genotype]))
 
     # design variable mutation 
     def dv_mutate(self):
@@ -58,27 +58,13 @@ class Genome(object):
 
         return
 
-    # metavariable insertion
-    def metavar_insert(self):
+    # metavariable insertion/deletion mutation
+    def mv_mutate(self):
         
         # to be implemented
     
         return
-
-    # metavariable deletion
-    def metavar_delete(self):
-        
-        # to be implemented
-        
-        return 
-
-    # similar-metavariable recombination
-    def sm_recombine(self, g1):
-        
-        # to be implemented 
     
-        return
-
     __repr__ = __str__
 # end of Genome
 
@@ -94,6 +80,37 @@ class MGA(object):
         # to be implemented
 
         return
+
+    # similar-metavariable recombination
+    def sm_recombination(self, p0, p1):
+        # initialize subsets
+        p0_subset = [[] for i in range(len(p1.genotype))]
+        p1_subset = [[] for i in range(len(p0.genotype))]
+
+        # form parent 0's subset
+        for mv0 in p0.genotype:
+            match_index = 0
+            lowest_diss = 1.0
+            for index, mv1 in enumerate(p1.genotype):
+                diss = mv0.dissimilarity(mv1)
+                if diss < lowest_diss:
+                    match_index = index
+                    lowest_diss = diss
+            p0_subset[match_index].append(mv0.mv_id)
+
+        # form parent 1's subset
+        for mv1 in p1.genotype:
+            match_index = 0
+            lowest_diss = 1.0
+            for index, mv0 in enumerate(p0.genotype):
+                diss = mv1.dissimilarity(mv0)
+                if diss < lowest_diss:
+                    match_index = index
+                    lowest_diss = diss
+            p1_subset[match_index].append(mv1.mv_id)
+
+        # temporary
+        return p0_subset, p1_subset
 
 # testing function
 def test():
@@ -114,8 +131,18 @@ def test():
 
     # genome test
     print("=== GENOME TEST ===")
-    g = Genome(0)
-    print(g)
+    g0 = Genome(0)
+    g1 = Genome(1)
+    print(g0)
+    print(g1)
+
+    # recombination test
+    print("=== RECOMBINATION TEST ===")
+    mga = MGA()
+    s0, s1 = mga.sm_recombination(g0, g1)
+    print("similar-metavariable recombination between g0 and g1")
+    print(s0)
+    print(s1)
 
 if __name__ == '__main__':
     test()
