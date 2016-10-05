@@ -40,8 +40,8 @@ MUTATION_RATE = 0.1
 # a fixed number of design variables. 
 class Metavar(object):
     def __init__(self, mv_id):
-        self.mv_id = mv_id 
-        self.dv = npr.rand(METAVAR_SIZE)
+        self.mv_id = mv_id                  # metavariable ID 
+        self.dv = npr.rand(METAVAR_SIZE)    # design variables
 
     def __str__(self):
         return "MV_ID %d: %s" % (self.mv_id, np.array_str(self.dv))
@@ -61,10 +61,9 @@ class Metavar(object):
 # random variable length, and a set of metavariables.
 class Genome(object):
     def __init__(self, g_id):
-        length = npr.randint(GENOME_LEN_MIN, GENOME_LEN_MAX)
-        self.g_id = g_id
-        self.length = length
-        self.genotype = [Metavar(i) for i in range(length)]
+        self.g_id = g_id                                            # genome ID
+        self.length = npr.randint(GENOME_LEN_MIN, GENOME_LEN_MAX)   # variable length
+        self.genotype = [Metavar(i) for i in range(self.length)]    # a set of metavariables
 
     def __str__(self):
         return "G_ID %d:\n%s" % (self.g_id, "\n".join([str(mv) for mv in self.genotype]))
@@ -101,11 +100,8 @@ class MGA(object):
 
     # similar-metavariable recombination
     def sm_recombination(self, p0, p1):
-        # initialize subsets
-        p0_subset = [[] for i in range(len(p1.genotype))]
-        p1_subset = [[] for i in range(len(p0.genotype))]
-
         # form parent 0's subset
+        p0_subset = [[] for i in range(len(p1.genotype))]
         for mv0 in p0.genotype:
             match_index = 0
             lowest_diss = 1.0
@@ -115,20 +111,42 @@ class MGA(object):
                     match_index = index
                     lowest_diss = diss
             p0_subset[match_index].append(mv0.mv_id)
+        p0_subset = [s for s in p0_subset if len(s) > 0]
+        num_subset = len(p0_subset)        
 
         # form parent 1's subset
+        p1_subset = [[] for i in range(num_subset)]
         for mv1 in p1.genotype:
-            match_index = 0
+            match_mvid = 0
             lowest_diss = 1.0
             for index, mv0 in enumerate(p0.genotype):
-                diss = mv1.dissimilarity(mv0)
+                diss = mv0.dissimilarity(mv0)
                 if diss < lowest_diss:
-                    match_index = index
+                    match_mvid = index
                     lowest_diss = diss
-            p1_subset[match_index].append(mv1.mv_id)
+
+            for index, s0 in enumerate(p0_subset):
+                for mv0 in s0:
+                    if mv0 == match_mvid:
+                        p1_subset[index].append(mv1.mv_id) 
+                
+
+        # form parent 1's subset
+        #for mv1 in p1.genotype:
+        #    match_index = 0
+        #    lowest_diss = 1.0
+        #    for index, mv0 in enumerate(p0.genotype):
+        #        diss = mv1.dissimilarity(mv0)
+        #        if diss < lowest_diss:
+        #            match_index = index
+        #            lowest_diss = diss
+        #    p1_subset[match_index].append(mv1.mv_id)
 
         # temporary
-        return [s for s in p0_subset if len(s) > 0], [s for s in p1_subset if len(s) > 0]
+        #p0_subset = [s for s in p0_subset if len(s) > 0]
+        #p1_subset = [s for s in p1_subset if len(s) > 0]
+
+        return p0_subset, p1_subset
 
 # testing function
 def test():
