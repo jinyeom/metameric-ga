@@ -110,7 +110,7 @@ class MGA(object):
             p1_subset[match_index].append(mv1.mv_id)
 
         # temporary
-        return p0_subset, p1_subset
+        return [s for s in p0_subset if len(s) > 0], [s for s in p1_subset if len(s) > 0]
 
 # testing function
 def test():

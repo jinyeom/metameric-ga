@@ -1,0 +1,5 @@
+# OS metadata
+.DS_Store
+
+# Vim
+*.swp
