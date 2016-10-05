@@ -101,7 +101,7 @@ class MGA(object):
     # similar-metavariable recombination
     def sm_recombination(self, p0, p1):
         # form parent 0's subset
-        p0_subset = [[] for i in range(len(p1.genotype))]
+        p0_subset = [[] for i, _ in enumerate(p1.genotype)]
         for mv0 in p0.genotype:
             match_index = 0
             lowest_diss = 1.0
@@ -112,24 +112,22 @@ class MGA(object):
                     lowest_diss = diss
             p0_subset[match_index].append(mv0.mv_id)
         p0_subset = [s for s in p0_subset if len(s) > 0]
-        num_subset = len(p0_subset)        
 
         # form parent 1's subset
+        num_subset = len(p0_subset)
         p1_subset = [[] for i in range(num_subset)]
         for mv1 in p1.genotype:
             match_mvid = 0
             lowest_diss = 1.0
             for index, mv0 in enumerate(p0.genotype):
-                diss = mv0.dissimilarity(mv0)
+                # can be later cached 
+                diss = mv1.dissimilarity(mv0)
                 if diss < lowest_diss:
                     match_mvid = index
                     lowest_diss = diss
-
             for index, s0 in enumerate(p0_subset):
-                for mv0 in s0:
-                    if mv0 == match_mvid:
-                        p1_subset[index].append(mv1.mv_id) 
-                
+                if match_mvid in s0:
+                    p1_subset[index].append(mv1.mv_id)
 
         # form parent 1's subset
         #for mv1 in p1.genotype:
@@ -141,10 +139,6 @@ class MGA(object):
         #            match_index = index
         #            lowest_diss = diss
         #    p1_subset[match_index].append(mv1.mv_id)
-
-        # temporary
-        #p0_subset = [s for s in p0_subset if len(s) > 0]
-        #p1_subset = [s for s in p1_subset if len(s) > 0]
 
         return p0_subset, p1_subset
 
